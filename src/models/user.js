@@ -20,4 +20,9 @@ var schema = mongoose.Schema({
   posts: [{ref:'Post', type: ObjectId}]
 });
 
+
+// var u = mongoose.model('User', schema);
+// var o = new u({name:'test'});
+// console.log(o);//{ name: 'test', _id: 5757d506378b018023bfc1aa, posts: [], comments: [] }
+
 module.exports = mongoose.model('User', schema);

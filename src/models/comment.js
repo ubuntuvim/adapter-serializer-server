@@ -6,8 +6,8 @@ var schema = mongoose.Schema({
   name: {
     type: String
   },
-  publicData: {
-    type: Date
+  publicDate: {
+    type: String
   },
   content: {
     type: String

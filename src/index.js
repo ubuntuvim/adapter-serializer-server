@@ -69,12 +69,13 @@ app.use(morgan('method=> :method url=> :url response-time=> :response-time'));
 // http://github.com/ethanresnick/express-simple-router. To protect some
 // routes, check out http://github.com/ethanresnick/express-simple-firewall.
 app.get("/", Front.docsRequest.bind(Front));
-app.route("/:type(people|organizations|schools)")
-  .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler);
-app.route("/:type(people|organizations|schools)/:id")
-  .get(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
-app.route("/:type(people|organizations|schools)/:id/relationships/:relationship")
-  .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
+
+// app.route("/:type(people|organizations|schools)")
+//   .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler);
+// app.route("/:type(people|organizations|schools)/:id")
+//   .get(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
+// app.route("/:type(people|organizations|schools)/:id/relationships/:relationship")
+//   .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
 
 // user
 app.route("/:type(users|user)")
@@ -89,6 +90,41 @@ app.route("/:type(users|user)/:id")
     .patch(apiReqHandler)
     .delete(apiReqHandler);
 
+// user
+app.route("/:type(comments)")
+    .get(apiReqHandler)
+    .post(apiReqHandler)
+    .patch(apiReqHandler)
+    .delete(apiReqHandler);
+// user?id=xxx
+app.route("/:type(comments)/:id")
+    .get(apiReqHandler)
+    .post(apiReqHandler)
+    .patch(apiReqHandler)
+    .delete(apiReqHandler);
+
+// app.use(function(req, res, next) {
+//     // 获取客户端传递过来的请求头信息
+//     console.log('API_KEY == ' + req.get('API_KEY'));
+//     console.log('ANOTHER_HEADER == ' + req.get('ANOTHER_HEADER'));
+//     // 其他处理……
+//     next();
+// });
+
+// api/v1/user
+// app.route("/api/v1/:type(users|user)")
+//     .get(apiReqHandler)
+//     .post(apiReqHandler)
+//     .patch(apiReqHandler)
+//     .delete(apiReqHandler);
+// // api/v1/user?id=xxx
+// app.route("/api/v1/:type(users|user)/:id")
+//     .get(apiReqHandler)
+//     .post(apiReqHandler)
+//     .patch(apiReqHandler)
+//     .delete(apiReqHandler);    
+
+// 客户端发送的请求都不匹配签名的路由则提示不存在
 app.use(function(req, res, next) {
   Front.sendError(new APIError(404, undefined, 'Not Found'), req, res);
 });
