@@ -18,7 +18,8 @@
     "mongoose": "4.0.x",
     "path-to-regexp": "0.1.2",
     "pluralize": "0.0.10",
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "morgan": "1.7.0"
   },
   "devDependencies": {
     "chai": "~1.9.0",

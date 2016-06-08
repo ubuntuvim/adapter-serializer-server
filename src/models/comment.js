@@ -3,14 +3,17 @@ var mongoose   = require('mongoose')
   , ObjectId   = mongoose.Schema.Types.ObjectId;
 
 var schema = mongoose.Schema({
-  name: {
+  title: {
     type: String
   },
   publicDate: {
-    type: String
+    type: Date
   },
   content: {
     type: String
+  },
+  flag: {
+    type: Boolean
   }
 });
 
