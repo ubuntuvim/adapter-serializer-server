@@ -6,7 +6,7 @@ var path     = require('path')
   , mongoose = require('mongoose');
 
 // Start by loading up all our mongoose models and connecting.
-mongoose.connect('mongodb://mg.ddlisting.com/test');
+mongoose.connect('mongodb://mg.ddlisting.com/ddlisting');
 
 var OrganizationModelSchema = require('./models/organization')
   , OrganizationModel       = OrganizationModelSchema.model
@@ -18,7 +18,9 @@ var models = {
   School: require('./models/school')(OrganizationModel, OrganizationSchema),
   User: require('./models/user'),
   Post: require('./models/post'),
-  Comment: require('./models/comment')
+  Comment: require('./models/comment'),
+  Category: require('./models/category'),
+  Todoitem: require('./models/Todoitem'),
 }
 
 // And registering them with the json-api library.
@@ -33,6 +35,8 @@ var registry = new API.ResourceTypeRegistry({
   users: require('./resource-descriptions/users'),
   posts: require('./resource-descriptions/posts'),
   comments: require('./resource-descriptions/comments'),
+  categories: require('./resource-descriptions/categories'),
+  todoItems: require('./resource-descriptions/todoItems')
 }, { dbAdapter: adapter });
 
 var Controller = new API.controllers.API(registry);
@@ -78,30 +82,20 @@ app.get("/", Front.docsRequest.bind(Front));
 //   .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
 
 // user
-app.route("/:type(users|user)")
-    .get(apiReqHandler)
-    .post(apiReqHandler)
-    .patch(apiReqHandler)
-    .delete(apiReqHandler);
-// user?id=xxx
-app.route("/:type(users|user)/:id")
-    .get(apiReqHandler)
-    .post(apiReqHandler)
-    .patch(apiReqHandler)
-    .delete(apiReqHandler);
+initRoute("/:type(users)");
+initRoute("/:type(users)/:id");
 
-// user
-app.route("/:type(comments)")
-    .get(apiReqHandler)
-    .post(apiReqHandler)
-    .patch(apiReqHandler)
-    .delete(apiReqHandler);
-// user?id=xxx
-app.route("/:type(comments)/:id")
-    .get(apiReqHandler)
-    .post(apiReqHandler)
-    .patch(apiReqHandler)
-    .delete(apiReqHandler);
+// comments
+initRoute("/:type(comments)");
+initRoute("/:type(comments)/:id");
+
+// category
+initRoute("/:type(categories)");
+initRoute("/:type(categories)/:id");
+
+// todoItem
+initRoute("/:type(todoItems)");
+initRoute("/:type(todoItems)/:id");
 
 // app.use(function(req, res, next) {
 //     // 获取客户端传递过来的请求头信息
@@ -122,7 +116,7 @@ app.route("/:type(comments)/:id")
 //     .get(apiReqHandler)
 //     .post(apiReqHandler)
 //     .patch(apiReqHandler)
-//     .delete(apiReqHandler);    
+//     .delete(apiReqHandler);
 
 // 客户端发送的请求都不匹配签名的路由则提示不存在
 app.use(function(req, res, next) {
@@ -132,3 +126,14 @@ app.use(function(req, res, next) {
 // And we're done! Start 'er up!
 console.log('Starting up! Visit 127.0.0.1:3000 to see the docs.');
 app.listen(3000);
+
+function initRoute(url) {
+    // URL请求前缀
+    var urlPrifix = "";
+
+    app.route(urlPrifix + url)
+        .get(apiReqHandler)
+        .post(apiReqHandler)
+        .patch(apiReqHandler)
+        .delete(apiReqHandler);
+}
