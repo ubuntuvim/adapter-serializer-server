@@ -3,20 +3,21 @@ var mongoose   = require('mongoose')
   , ObjectId   = mongoose.Schema.Types.ObjectId;
 
 var schema = mongoose.Schema({
-  title: {type: String},
-  checked: {type: Boolean},
-  star: {type: String},
-  timestamp: {type: Number},
-  record_status: {type: Number}, // 项目状态：1-正常；2-删除；3-过期
-  start_date: {type:String},
-  end_date: {type:String},
-  is_publish: {type:Boolean},
-  is_child_or_parent: {type:Boolean},
-  child_todos: [{ref:'Todoitem', type: ObjectId}],
-  parent_todo: [{ref:'Todoitem', type: ObjectId}],
-  remark: {type:String},
-  user: [{ref:'User', type: ObjectId}],
-  project: [{ref:'Category', type: ObjectId}]
+    userid: { type: String },
+    title: {type: String},
+    checked: {type: Boolean},
+    star: {type: String},
+    timestamp: {type: Number},
+    recordstatus: {type: Number}, // 项目状态：1-正常；2-删除；3-过期
+    startdate: {type:String},
+    enddate: {type:String},
+    ispublish: {type:Boolean},
+    ischildorparent: {type:Boolean},
+    childtodos: [{ref:'Todoitem', type: ObjectId}],
+    parenttodo: [{ref:'Todoitem', type: ObjectId}],
+    remark: {type:String},
+    user: {ref:'User', type: ObjectId},
+    category: {ref:'Category', type: ObjectId}
 });
 
 module.exports = mongoose.model('Todoitem', schema);

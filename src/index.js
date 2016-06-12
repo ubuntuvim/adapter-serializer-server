@@ -20,7 +20,7 @@ var models = {
   Post: require('./models/post'),
   Comment: require('./models/comment'),
   Category: require('./models/category'),
-  Todoitem: require('./models/Todoitem'),
+  Todoitem: require('./models/todoItem'),
 }
 
 // And registering them with the json-api library.
@@ -54,6 +54,13 @@ var apiReqHandler = Front.apiRequest.bind(Front);
 var cors = require('cors');
 app.use(cors());
 
+// POST请求参数解析
+var bodyParser = require('body-parser');
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 // Enable CORS. Note: if you copy this code into production, you may want to
 // disable this. See https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
 app.use(function(req, res, next) {
@@ -81,19 +88,104 @@ app.get("/", Front.docsRequest.bind(Front));
 // app.route("/:type(people|organizations|schools)/:id/relationships/:relationship")
 //   .get(apiReqHandler).post(apiReqHandler).patch(apiReqHandler).delete(apiReqHandler);
 
+// 登录
+app.post('/login', function (req, res, next) {
+  // 如果是根据email查询的先执行
+  var email = req.body.email;
+  console.log('email ==== ' + req.body.email);
+  console.log('password ==== ' + req.body.password);
+  if (email) {
+      var user = require('./models/user');
+      var userFormat = require('./format/user');
+      var queryParams = null;
+      if (req.query.password) {
+          queryParams = { email: email, password: req.body.password };
+      } else {
+          queryParams = { email: email };
+      }
+      var ret = user.find(queryParams, function(err, docs) {
+          res.send(userFormat.format(docs));
+      });
+  } else {
+      res.send(200);
+    // next();  //继续执行后面的路由处理
+  }
+});
+
 // user
-initRoute("/:type(users)");
+// 自定义处理：  GET /users?email=tomster@example.com&password=xxx
+app.get('/users', function (req, res, next) {
+  // 如果是根据email查询的先执行
+  var email = req.query.email;
+  if (email) {
+      var user = require('./models/user');
+      var userFormat = require('./format/user');
+      var queryParams = null;
+      if (req.query.password) {
+          queryParams = { email: email, password: req.query.password };
+      } else {
+          queryParams = { email: email };
+      }
+      var ret = user.find(queryParams, function(err, docs) {
+          res.send(userFormat.format(docs));
+      });
+  } else {
+    //   res.send(null);
+    next();  //继续执行后面的路由处理
+  }
+});
+
 initRoute("/:type(users)/:id");
+initRoute("/:type(users)");
 
 // comments
 initRoute("/:type(comments)");
 initRoute("/:type(comments)/:id");
 
 // category
+app.get('/categories', function (req, res, next) {
+  // 如果是根据userId查询的先执行
+  var userId = req.query.userid;
+  var catgstatus = req.query.catgstatus;
+  if (userId || catgstatus) {
+      var category = require('./models/category');
+      var categoryFormat = require('./format/category');
+      var queryParams = { userid: userId, catgstatus: catgstatus };
+      var ret = category.find(queryParams, function(err, docs) {
+          if (err)
+            throw err;
+
+            console.log('docs',docs);
+            res.send(categoryFormat.format(docs));
+      });
+  } else {
+    //   res.send(null);
+    next();  //继续执行后面的路由处理
+  }
+});
 initRoute("/:type(categories)");
 initRoute("/:type(categories)/:id");
 
 // todoItem
+app.get('/todoItems', function (req, res, next) {
+  // 如果是根据userId查询的先执行
+  var userId = req.query.userid;
+  var recordstatus = req.query.recordstatus;
+  if (userId || recordstatus) {
+      var todoItem = require('./models/todoItem');
+      var todoItemFormat = require('./format/todoItem');
+      var queryParams = { userid: userId, recordstatus: recordstatus };
+      var ret = todoItem.find(queryParams, function(err, docs) {
+          if (err)
+            throw err;
+            console.log('docs',docs);
+          res.send(todoItemFormat.format(docs));
+      });
+  } else {
+    //   res.send(null);
+    next();  //继续执行后面的路由处理
+  }
+});
 initRoute("/:type(todoItems)");
 initRoute("/:type(todoItems)/:id");
 
@@ -127,13 +219,16 @@ app.use(function(req, res, next) {
 console.log('Starting up! Visit 127.0.0.1:3000 to see the docs.');
 app.listen(3000);
 
+// URL请求前缀
 function initRoute(url) {
-    // URL请求前缀
     var urlPrifix = "";
-
     app.route(urlPrifix + url)
-        .get(apiReqHandler)
         .post(apiReqHandler)
+        .get(apiReqHandler)
         .patch(apiReqHandler)
         .delete(apiReqHandler);
+}
+function getRequest(url) {
+    var urlPrifix = "";
+    app.route(urlPrifix + url).get(apiReqHandler);
 }

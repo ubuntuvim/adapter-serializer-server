@@ -3,26 +3,28 @@ var mongoose   = require('mongoose')
   , ObjectId   = mongoose.Schema.Types.ObjectId;
 
 var schema = mongoose.Schema({
-  name: {
+  nickname: {
     type: String
-    // required: true,
-    // unique: true,
-    // index: true
   },
-  birth: { type: 'Date' },
+  email: {
+      type: 'String',
+      required: true,
+      unique: true,
+      index: true
+  },
   password: {
     type: String
   },
-  addr: {
-    type: String
+  createdate: {
+    type: Date
   },
-  comments: [{ref:'Comment', type: ObjectId}],
-  posts: [{ref:'Post', type: ObjectId}]
+  usergrade: { type: Number },  //用户等级，暂时用不上预留
+  status: { type: Boolean },
+  userprofile: { type: String },  //用户头像
+  // comments: [{ref:'Comment', type: ObjectId}],
+  todos: [{ref:'Todoitem', type: ObjectId}],
+  categorys: [{ref:'Category', type: ObjectId}]
 });
 
-
-// var u = mongoose.model('User', schema);
-// var o = new u({name:'test'});
-// console.log(o);//{ name: 'test', _id: 5757d506378b018023bfc1aa, posts: [], comments: [] }
 
 module.exports = mongoose.model('User', schema);
