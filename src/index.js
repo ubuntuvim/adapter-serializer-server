@@ -7,6 +7,7 @@ var path     = require('path')
 
 // Start by loading up all our mongoose models and connecting.
 mongoose.connect('mongodb://mg.ddlisting.com/ddlisting');
+// mongoose.connect('mongodb://ddlisting.wilddogio.com');
 
 var OrganizationModelSchema = require('./models/organization')
   , OrganizationModel       = OrganizationModelSchema.model
