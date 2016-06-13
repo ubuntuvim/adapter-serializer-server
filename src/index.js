@@ -175,11 +175,16 @@ app.get('/todoItems', function (req, res, next) {
   if (userId || recordstatus) {
       var todoItem = require('./models/todoItem');
       var todoItemFormat = require('./format/todoItem');
-      var queryParams = { userid: userId, recordstatus: recordstatus };
+      var queryParams = null;
+      if (recordstatus) {
+          queryParams = { userid: userId, recordstatus: recordstatus };
+      } else {
+          queryParams = { userid: userId };
+      }
       var ret = todoItem.find(queryParams, function(err, docs) {
           if (err)
             throw err;
-            console.log('docs',docs);
+            // console.log('docs',docs);
           res.send(todoItemFormat.format(docs));
       });
   } else {
