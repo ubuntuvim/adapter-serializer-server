@@ -9,8 +9,8 @@ var schema = mongoose.Schema({
     star: {type: String},
     timestamp: {type: Number},
     recordstatus: {type: Number}, // 项目状态：1-正常；2-删除；3-过期
-    startdate: {type:String},
-    enddate: {type:String},
+    startdate: {type:Number},
+    enddate: {type:Number},
     ispublish: {type:Boolean},
     ischildorparent: {type:Boolean},
     childtodos: [{ref:'Todoitem', type: ObjectId}],
