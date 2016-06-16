@@ -156,7 +156,7 @@ app.get('/categories', function (req, res, next) {
           if (err)
             throw err;
 
-            console.log('docs',docs);
+            // console.log('docs',docs);
             res.send(categoryFormat.format(docs));
       });
   } else {
