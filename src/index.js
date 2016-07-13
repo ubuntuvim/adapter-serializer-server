@@ -5,8 +5,9 @@ var path     = require('path')
   , APIError = API.types.Error
   , mongoose = require('mongoose');
 
-// Start by loading up all our mongoose models and connecting.
-mongoose.connect('mongodb://mg.ddlisting.com/ddlisting');
+// 连接到MongoDB数据库
+// 比如连接到本地MongoDBURL为: 'mongodb://localhost:27017/数据库名'
+mongoose.connect(数据库连接URL);
 // mongoose.connect('mongodb://ddlisting.wilddogio.com');
 
 var OrganizationModelSchema = require('./models/organization')
