@@ -3,6 +3,8 @@
 Emberjs适配器和序列化器示例的后端处理程序。
 数据库是[Mongodb](https://mongodb.org)，数据格式处理使用[node json-api](https://github.com/ethanresnick/json-api)。
 
+**注意：**clone下来之后需要修改 src/index.js里连接MongoDB数据库的URL！！否则无法启动。
+
 1. Clone the repo
 2. Run `npm install`
 3. Ensure MongoDB is running and listening on the default port
